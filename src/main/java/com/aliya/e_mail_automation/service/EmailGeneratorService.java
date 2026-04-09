@@ -11,10 +11,31 @@ public class EmailGeneratorService {
     public String generateEmail(EmailRequest emailRequest) {
 
         //build prompt
+        String prompt = buildPrompt(emailRequest);
         //Prepare JSON body
-        //Send request
-        //Extract Response
 
+        String requestBody = String.format("""
+                {
+                     "contents" : [
+                     
+                          {
+                            "parts":[
+                               {
+                                  "text": "%s"
+                                }
+                            ]
+                          }
+                     ]
+                
+                }""", prompt);
+
+
+
+        //Send request
+
+
+        //Extract Response
+    }
 
         private String buildPrompt(EmailRequest emailRequest) {
 
@@ -31,5 +52,5 @@ public class EmailGeneratorService {
                    return prompt.toString();
         }
 
-    }
+
 }
