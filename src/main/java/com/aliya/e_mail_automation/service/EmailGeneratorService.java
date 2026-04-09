@@ -1,11 +1,24 @@
 package com.aliya.e_mail_automation.service;
 
 import com.aliya.e_mail_automation.EmailRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class EmailGeneratorService {
 
+    private final WebClient webClient;
+    private final String apiKey;
+
+    public EmailGeneratorService(WebClient.Builder webClientBuilder,
+                                 @Value("${gemini.api.url}") String baseUrl,
+                                 @Value("${gemini.api.key}") String geminiApiKey)
+    {    
+        this.apiKey = geminiApiKey;
+        this.webClient = webClientBuilder.baseUrl(baseUrl)
+                         .build();
+    }
 
 
     public String generateEmail(EmailRequest emailRequest) {
