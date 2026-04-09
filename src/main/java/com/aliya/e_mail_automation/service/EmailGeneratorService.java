@@ -4,6 +4,8 @@ import com.aliya.e_mail_automation.EmailRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 @Service
 public class EmailGeneratorService {
@@ -59,10 +61,29 @@ public class EmailGeneratorService {
 
         //Extract Response
 
+         return  extractResponseContent(response);
 
     }
 
-        private String buildPrompt(EmailRequest emailRequest) {
+    private String extractResponseContent(String response) {
+
+        try{
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root  = mapper.readTree(response);
+            root.path("candidates")
+                    .get(0)
+                    .path("content")
+                    .path("parts")
+                    .get(0)
+                    .path("text")
+                    .asText();
+        }catch(JsonProcessingException e){
+
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String buildPrompt(EmailRequest emailRequest) {
 
            StringBuilder prompt = new StringBuilder();
            prompt.append("Generate a professional email reply for the following email: ");
